@@ -18,7 +18,7 @@
 // обёртка промисом функции setTimeout
 const wait = function (seconds) {
    return new Promise(function (resolve) {
-      setTimeout(resolve, seconds);
+      setTimeout(resolve, seconds * 1000);
    });
 }
 
@@ -38,26 +38,34 @@ wait(1000)
 
 
 
+let img;
 
 const createImageElement = function (imagePath) {
    return new Promise(function (resolve, reject) {
-      const newElem = document.createElement('img');
-      newElem.src = imagePath;
+      img = document.createElement('img');
+      img.src = imagePath;
 
-      newElem.addEventListener('load', function () {
+      img.addEventListener('load', function () {
          document.querySelector('.images').prepend(this);
          resolve(this);
       });
 
-      newElem.addEventListener('error', function () {
-         console.log('huy');
+      img.addEventListener('error', function () {
+         reject('картинка не загрузилась !');
       });
    });
 }
 
 
 createImageElement('img/image1.jpg')
-   .then(elem => console.log(elem));
+   .then(() => wait(2))
+   .then(() => {
+      img.style.display = 'none';
+      return createImageElement('img/image2.jpg')
+   })
+   .then(() => wait(2))
+   .then(()=> img.style.display = 'none')
+   .catch(e => console.error(e));
 
 
 
