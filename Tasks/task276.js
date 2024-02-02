@@ -51,7 +51,7 @@ const createImageElement = function (imagePath) {
       });
 
       img.addEventListener('error', function () {
-         reject('картинка не загрузилась !');
+         reject(new Error('картинка не загрузилась !'));
       });
    });
 }
@@ -66,6 +66,7 @@ createImageElement('img/image1.jpg')
    .then(() => wait(2))
    .then(()=> img.style.display = 'none')
    .catch(e => console.error(e));
+
 
 
 
